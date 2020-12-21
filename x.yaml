@@ -1,0 +1,31 @@
+framework:
+    workflows:
+        App\Entity\Script:
+            type: state_machine
+            audit_trail:
+                enabled: true
+            marking_store:
+                property: status
+            supports: App\Entity\Script
+            places:
+                - !php/const App\Entity\Script::PLACE_NEW
+                - !php/const App\Entity\Script::PLACE_TEXT
+                - !php/const App\Entity\Script::PLACE_CHARACTERS
+                - !php/const App\Entity\Script::PLACE_PREVIEW
+                - !php/const App\Entity\Script::PLACE_PUBLISHED
+                - !php/const App\Entity\Script::PLACE_REVISING_TEXT
+                - !php/const App\Entity\Script::PLACE_REVISING_CHARACTERS
+            transitions:
+                !php/const App\Entity\Script::TRANSITION_SETUP:
+                    from: !php/const App\Entity\Script::PLACE_NEW
+                    to: !php/const App\Entity\Script::PLACE_TEXT
+                !php/const App\Entity\Script::TRANSITION_PREVIEW:
+                    from: !php/const App\Entity\Script::PLACE_NEW
+                    to: !php/const App\Entity\Script::PLACE_CHARACTERS
+                !php/const App\Entity\Script::TRANSITION_REVISE_CHARACTERS:
+                    from: !php/const App\Entity\Script::PLACE_NEW
+                    to: !php/const App\Entity\Script::PLACE_PREVIEW
+                !php/const App\Entity\Script::TRANSITION_REVISE_TEXT:
+                    from: !php/const App\Entity\Script::PLACE_NEW
+                    to: !php/const App\Entity\Script::PLACE_PUBLISHED
+            initial_marking: !php/const App\Entity\Script::PLACE_NEW
